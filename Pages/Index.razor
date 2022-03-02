@@ -1,30 +1,9 @@
-@page "/"
-@inject AuthenticationStateProvider AuthState
-@attribute [Authorize]
+﻿@page "/"
 
-<h1>Welcome, @Username!</h1>
-You can only see this content if you're authenticated.
-<br />
-<img src="@Picture">
+<PageTitle>Index</PageTitle>
 
-@code { 
-  private string Username = "Anonymous User";
-  private string Picture = "";
+<h1>Hello, world!</h1>
 
-  protected override async Task OnInitializedAsync()
-  {
-    var state = await AuthState.GetAuthenticationStateAsync();
+Welcome to your new app.
 
-    Username = state.User.Claims
-                .Where(c => c.Type.Equals("name"))
-                .Select(c => c.Value)
-                .FirstOrDefault() ?? string.Empty;
-
-    Picture = state.User.Claims
-                .Where(c => c.Type.Equals("picture"))
-                .Select(c => c.Value)
-                .FirstOrDefault() ?? string.Empty;
-
-    await base.OnInitializedAsync();
-  }
-}
+<SurveyPrompt Title="How is Blazor working for you?" />
