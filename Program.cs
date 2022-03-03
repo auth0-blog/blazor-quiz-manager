@@ -1,8 +1,13 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using QuizManager.Data;
+using Auth0.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services
+    .AddAuth0WebAppAuthentication(options => {
+      options.Domain = builder.Configuration["Auth0:Domain"];
+      options.ClientId = builder.Configuration["Auth0:ClientId"];
+    });
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -24,6 +29,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
