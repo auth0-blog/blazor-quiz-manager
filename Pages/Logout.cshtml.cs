@@ -1,16 +1,23 @@
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authentication;
+using Auth0.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace QuizManager.Pages
 {
-    public class LogoutModel : PageModel
+  public class LogoutModel : PageModel
+  {
+    [Authorize]
+    public async Task OnGet()
     {
-        public async Task OnGet()
-        {
-            await HttpContext.SignOutAsync("Auth0", new AuthenticationProperties { RedirectUri = "/" });
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        }
+      var authenticationProperties = new LogoutAuthenticationPropertiesBuilder()
+           .WithRedirectUri("/")
+           .Build();
+
+      await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+      await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
     }
+  }
 }
